@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>About Me | PANAGUITON</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+/* ===== TOKENS ===== */
+:root{
+  --bg:#05070d; --bg-2:#0a0f1a;
+  --cyan:#00E5FF; --red:#FF1744;
+  --text:#e8f1f7; --muted:#8fa3b3;
+  --glass:rgba(12,18,30,.55); --border:rgba(0,229,255,.22);
+  --grad:linear-gradient(90deg,var(--cyan),var(--red));
+  --radius:20px;
+  --font:'Space Grotesk',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+body{background:radial-gradient(1200px 600px at 80% -10%,rgba(0,229,255,.08),transparent),radial-gradient(900px 500px at 0% 40%,rgba(255,23,68,.07),transparent),var(--bg);
+  color:var(--text);font-family:var(--font);line-height:1.6;overflow-x:hidden;min-height:100vh}
+a{color:inherit;text-decoration:none}
+.container{width:min(1180px,92%);margin:0 auto}
+#bg-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.grid-overlay{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(rgba(0,229,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,.05) 1px,transparent 1px);
+  background-size:60px 60px;mask-image:radial-gradient(circle at 50% 30%,#000 20%,transparent 75%);animation:gridMove 20s linear infinite}
+@keyframes gridMove{to{background-position:60px 60px}}
+main,.footer{position:relative;z-index:1}
+
+/* ===== NAV ===== */
+.nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;justify-content:space-between;align-items:center;
+  padding:16px 5%;background:rgba(5,7,13,.6);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);transition:.3s}
+.nav.scrolled{background:rgba(5,7,13,.9);box-shadow:0 8px 30px rgba(0,229,255,.08)}
+.logo{font-weight:700;letter-spacing:.2em;font-size:1.2rem;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.nav-links{display:flex;gap:2rem}
+.nav-links a{position:relative;color:var(--muted);font-weight:500;padding:4px 0;transition:.3s}
+.nav-links a::after{content:"";position:absolute;left:0;bottom:-4px;height:2px;width:0;background:var(--grad);transition:.3s;box-shadow:0 0 10px var(--cyan)}
+.nav-links a:hover,.nav-links a.active{color:var(--text)}
+.nav-links a:hover::after,.nav-links a.active::after{width:100%}
+.nav-toggle{display:none;background:none;border:0;cursor:pointer;flex-direction:column;gap:5px;padding:6px}
+.nav-toggle span{width:24px;height:2px;background:var(--cyan);transition:.3s}
+
+/* ===== SHARED ===== */
+.gradient-text{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.glow{filter:drop-shadow(0 0 18px rgba(0,229,255,.35)) drop-shadow(0 0 28px rgba(255,23,68,.25))}
+.glass{background:var(--glass);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid var(--border);
+  border-radius:var(--radius);box-shadow:0 10px 40px rgba(0,0,0,.4),0 0 30px rgba(0,229,255,.06)}
+.card{padding:2rem}
+.section{padding:4.5rem 0}
+.section-title{font-size:clamp(1.9rem,4vw,2.8rem);font-weight:700;margin-bottom:2rem;display:inline-block;position:relative}
+.section-title::after{content:"";display:block;height:3px;width:60%;margin-top:.5rem;background:var(--grad);border-radius:3px;box-shadow:0 0 12px var(--cyan)}
+.btn{display:inline-block;padding:.85rem 1.8rem;border-radius:999px;font-weight:600;transition:.3s}
+.btn-primary{background:var(--grad);color:#05070d;box-shadow:0 0 25px rgba(0,229,255,.35)}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 0 35px rgba(255,23,68,.5)}
+.btn-ghost{border:1px solid var(--cyan);color:var(--cyan)}
+.btn-ghost:hover{border-color:var(--red);color:var(--red);transform:translateY(-3px);box-shadow:0 0 20px rgba(255,23,68,.3)}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+
+/* Reveal */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .8s ease,transform .8s ease}
+.reveal.visible{opacity:1;transform:none}
+
+/* ===== HERO ===== */
+.hero{min-height:100vh;display:grid;grid-template-columns:1.2fr 1fr;gap:3rem;align-items:center;padding-top:120px;position:relative;z-index:1}
+.hero h1{font-size:clamp(2.6rem,7vw,5.5rem);line-height:1.02;font-weight:700;letter-spacing:-.02em}
+.subtitle{color:var(--muted);font-size:1.15rem;max-width:480px;margin:1.5rem 0 2rem}
+.hero-actions{display:flex;gap:1rem;flex-wrap:wrap}
+.hero-photo{position:relative;display:grid;place-items:center;aspect-ratio:1;max-width:420px;margin:0 auto;width:100%}
+.photo-frame{width:75%;aspect-ratio:4/5;overflow:hidden;position:relative;z-index:2;box-shadow:0 0 50px rgba(0,229,255,.25),0 0 80px rgba(255,23,68,.15)}
+.photo-frame img{width:100%;height:100%;object-fit:cover}
+.photo-placeholder{height:100%;display:grid;place-content:center;justify-items:center;gap:.8rem;color:var(--cyan)}
+.photo-placeholder svg{width:90px;height:90px}
+.photo-placeholder span{color:var(--muted);font-size:.9rem}
+.ring{position:absolute;border-radius:50%;border:2px solid transparent}
+.ring-1{inset:2%;border-top-color:var(--cyan);border-right-color:var(--cyan);animation:spin 14s linear infinite;box-shadow:0 0 25px rgba(0,229,255,.2)}
+.ring-2{inset:10%;border-bottom-color:var(--red);border-left-color:var(--red);animation:spin 20s linear infinite reverse}
+@keyframes spin{to{transform:rotate(360deg)}}
+.orb{position:absolute;width:16px;height:16px;border-radius:50%;z-index:3;animation:float 5s ease-in-out infinite}
+.orb-cyan{background:var(--cyan);top:12%;right:8%;box-shadow:0 0 20px var(--cyan)}
+.orb-red{background:var(--red);bottom:14%;left:6%;box-shadow:0 0 20px var(--red);animation-delay:-2.5s}
+@keyframes float{50%{transform:translateY(-16px)}}
+
+/* ===== INFO ===== */
+.info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.5rem 2.5rem}
+.info-grid>div{padding-left:1rem;border-left:2px solid var(--cyan)}
+.info-grid>div:nth-child(even){border-left-color:var(--red)}
+.info-grid .wide{grid-column:1/-1}
+dt{color:var(--cyan);font-size:.85rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.info-grid>div:nth-child(even) dt{color:var(--red)}
+dd{font-size:1.1rem;margin-top:.2rem}
+
+/* ===== STORY ===== */
+.story-card{position:relative;overflow:hidden}
+.story-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(var(--cyan),var(--red));box-shadow:0 0 15px var(--cyan)}
+.story-card p{color:#c6d4de;font-size:1.05rem;max-width:75ch}
+.story-card p+p{margin-top:1rem}
+
+/* ===== HOBBIES ===== */
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1.4rem}
+.hobby{position:relative;transition:transform .35s,border-color .35s,box-shadow .35s}
+.hobby:hover{transform:translateY(-8px);border-color:var(--red);box-shadow:0 18px 40px rgba(255,23,68,.2)}
+.hobby svg{width:40px;height:40px;fill:none;stroke:var(--cyan);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;margin-bottom:1rem;filter:drop-shadow(0 0 6px rgba(0,229,255,.5))}
+.hobby h3{margin-bottom:.3rem}
+.hobby p{color:var(--muted);font-size:.95rem}
+.dot{position:absolute;top:18px;right:18px;width:9px;height:9px;border-radius:50%;background:var(--red);box-shadow:0 0 12px var(--red);animation:pulse 2.4s infinite}
+@keyframes pulse{50%{opacity:.35}}
+
+/* ===== GOALS ===== */
+.goals-card{display:grid;gap:1.8rem}
+.goal-head{display:flex;justify-content:space-between;align-items:baseline}
+.goal-head h3{color:var(--cyan)}
+.goal-head span{color:var(--red);font-weight:600}
+.goal p{color:var(--muted);margin:.2rem 0 .7rem}
+.bar{height:8px;background:rgba(255,255,255,.07);border-radius:8px;overflow:hidden}
+.fill{height:100%;width:0;background:var(--grad);border-radius:8px;box-shadow:0 0 14px rgba(0,229,255,.6);transition:width 1.6s cubic-bezier(.2,.8,.2,1)}
+
+/* ===== FACTS ===== */
+.facts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1.2rem}
+.fact{padding:1.3rem 1.5rem;transition:.3s;border-left:3px solid var(--cyan)}
+.fact:nth-child(even){border-left-color:var(--red)}
+.fact:hover{transform:translateY(-5px);box-shadow:0 0 30px rgba(0,229,255,.2)}
+.fact span{display:block;color:var(--muted);font-size:.85rem}
+.fact strong{font-size:1.15rem;font-weight:600}
+
+/* ===== QUOTE ===== */
+.quote{text-align:center;padding:6rem 0}
+.quote blockquote{font-size:clamp(1.6rem,4.5vw,3rem);font-weight:600;line-height:1.25;max-width:900px;margin:0 auto}
+
+/* ===== FOOTER ===== */
+.footer{border-top:1px solid var(--border);background:rgba(5,7,13,.8);backdrop-filter:blur(12px);padding:3rem 0 1.5rem}
+.footer-inner{display:flex;justify-content:space-between;align-items:center;gap:1.5rem;flex-wrap:wrap}
+.footer-links{display:flex;gap:1.5rem;flex-wrap:wrap}
+.footer-links a{color:var(--muted);transition:.3s}
+.footer-links a:hover{color:var(--cyan)}
+.socials{display:flex;gap:.8rem}
+.socials a{width:42px;height:42px;display:grid;place-items:center;border:1px solid var(--border);border-radius:50%;transition:.3s}
+.socials svg{width:18px;height:18px;fill:none;stroke:var(--cyan);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.socials a:hover{border-color:var(--red);transform:translateY(-4px);box-shadow:0 0 18px rgba(255,23,68,.4)}
+.socials a:hover svg{stroke:var(--red)}
+.copyright{text-align:center;color:var(--muted);font-size:.85rem;margin-top:2rem}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr;text-align:center;padding-top:110px}
+  .subtitle{margin-inline:auto}
+  .hero-actions{justify-content:center}
+  .hero-photo{max-width:320px;order:-1}
+  .hero{min-height:auto;padding-bottom:2rem}
+}
+@media(max-width:720px){
+  .nav-toggle{display:flex}
+  .nav-links{position:absolute;top:100%;left:0;right:0;flex-direction:column;gap:0;background:rgba(5,7,13,.96);border-bottom:1px solid var(--border);
+    max-height:0;overflow:hidden;transition:max-height .4s}
+  .nav-links.open{max-height:320px}
+  .nav-links a{padding:1rem 5%}
+  .footer-inner{flex-direction:column;text-align:center}
+  .card{padding:1.4rem}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .reveal{opacity:1;transform:none}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+  <canvas id="bg-canvas" aria-hidden="true"></canvas>
+  <div class="grid-overlay" aria-hidden="true"></div>
+
+  <!-- NAVIGATION: update hrefs to match your existing site files -->
+  <header class="nav" id="nav">
+    <a href="index.html" class="logo">PANAGUITON</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    <nav class="nav-links" id="navLinks">
+      <a href="index.html">Home</a>
+      <a href="about-me.html" class="active" aria-current="page">About</a>
+      <a href="gallery.html">Gallery</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero container">
+      <div class="hero-text reveal">
+        <h1 class="gradient-text glow">PERSONAL<br>INFORMATION</h1>
+        <p class="subtitle">Get to know more about me, my interests, goals, and the person behind Panaguiton.</p>
+        <div class="hero-actions">
+          <a href="#about" class="btn btn-primary">Read more</a>
+          <a href="index.html#contact" class="btn btn-ghost">Contact me</a>
+        </div>
+      </div>
+      <div class="hero-photo reveal">
+        <div class="ring ring-1"></div>
+        <div class="ring ring-2"></div>
+        <span class="orb orb-cyan"></span><span class="orb orb-red"></span>
+        <div class="photo-frame glass">
+          <img src="images/picture.jfif" alt="My photo">
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT ME -->
+    <section class="section container" id="about">
+      <h2 class="section-title gradient-text reveal">About Me</h2>
+      <div class="glass card info-card reveal">
+        <dl class="info-grid">
+          <div><dt>Full Name</dt><dd>Panaguiton</dd></div>
+          <div><dt>Age</dt><dd>17</dd></div>
+          <div><dt>Birthday</dt><dd>March 29, 2009</dd></div>
+          <div><dt>Location</dt><dd>Quezon City, Philippines</dd></div>
+          <div><dt>Nationality</dt><dd>Filipino</dd></div>
+          <div><dt>Hobbies</dt><dd>Gaming, music, coding</dd></div>
+          <div><dt>Interests</dt><dd>Technology, web design, travel</dd></div>
+          <div><dt>Personality</dt><dd>Curious, creative, driven</dd></div>
+          <div class="wide"><dt>Current Goal</dt><dd>Hardworking and motivated person willing to work and learn new skills and abilities. Committed to being positive, flexible and adaptable team member to help the working environment grow and succeed.</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    
+
+    <!-- HOBBIES -->
+    <section class="section container" id="interests">
+      <h2 class="section-title gradient-text reveal">Hobbies &amp; Interests</h2>
+      <div class="cards-grid">
+        <div class="glass card hobby reveal"><i class="dot"></i>
+          <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="11" rx="5"/><path d="M7 10v5M4.5 12.5h5M16 11.5h.01M18.5 13.5h.01"/></svg>
+          <h3>Gaming</h3><p>Exploring worlds and sharpening strategy.</p></div>
+        <div class="glass card hobby reveal"><i class="dot"></i>
+          <svg viewBox="0 0 24 24"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg>
+          <h3>Music</h3><p>Playlists for focus, energy, and mood.</p></div>
+        <div class="glass card hobby reveal"><i class="dot"></i>
+          <svg viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"/><path d="M9 1v4M15 1v4M9 19v4M15 19v4M1 9h4M1 15h4M19 9h4M19 15h4"/></svg>
+          <h3>Technology</h3><p>Gadgets, software, and what comes next.</p></div>
+        <div class="glass card hobby reveal"><i class="dot"></i>
+          <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M7 6.5h.01M10 6.5h.01"/></svg>
+          <h3>Web Design</h3><p>Building clean, futuristic interfaces.</p></div>
+        <div class="glass card hobby reveal"><i class="dot"></i>
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg>
+          <h3>Traveling</h3><p>New places, food, and perspectives.</p></div>
+        <div class="glass card hobby reveal"><i class="dot"></i>
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18M5.5 5.5c4 3 9 3 13 0M5.5 18.5c4-3 9-3 13 0"/></svg>
+          <h3>Sports</h3><p>Staying active and competitive.</p></div>
+        <div class="glass card hobby reveal"><i class="dot"></i>
+          <svg viewBox="0 0 24 24"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7V16h8v-1.3A7 7 0 0 0 12 2z"/></svg>
+          <h3>Creativity</h3><p>Turning ideas into something real.</p></div>
+        <div class="glass card hobby reveal"><i class="dot"></i>
+          <svg viewBox="0 0 24 24"><path d="M12 21s-8-5.5-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 5.5-8 11-8 11z"/></svg>
+          <h3>Other Interests</h3><p>[Add your own interests here.]</p></div>
+      </div>
+    </section>
+
+    <!-- GOALS -->
+    <section class="section container" id="goals">
+      <h2 class="section-title gradient-text reveal">Goals &amp; Dreams</h2>
+      <div class="glass card goals-card reveal">
+        <div class="goal"><div class="goal-head"><h3>Career Goal</h3><span data-count="70">0%</span></div><p>[Add my career goal]</p><div class="bar"><div class="fill" data-fill="70"></div></div></div>
+        <div class="goal"><div class="goal-head"><h3>Personal Goal</h3><span data-count="55">0%</span></div><p>[Add my personal goal]</p><div class="bar"><div class="fill" data-fill="55"></div></div></div>
+        <div class="goal"><div class="goal-head"><h3>Future Dream</h3><span data-count="55">0%</span></div><p>[Add my future dream]</p><div class="bar"><div class="fill" data-fill="30"></div></div></div>
+        <div class="goal"><div class="goal-head"><h3>Learning Goal</h3><span data-count="80">0%</span></div><p>[Add something I want to learn]</p><div class="bar"><div class="fill" data-fill="80"></div></div></div>
+      </div>
+    </section>
+
+    <!-- QUICK FACTS -->
+    <section class="section container" id="facts">
+      <h2 class="section-title gradient-text reveal">Quick Facts</h2>
+      <div class="facts-grid">
+        <div class="glass fact reveal"><span>Favorite Color</span><strong>Cyan &amp; Red</strong></div>
+        <div class="glass fact reveal"><span>Favorite Food</span><strong>Pandesal</strong></div>
+        <div class="glass fact reveal"><span>Favorite Game</span><strong>Minecraft</strong></div>
+        <div class="glass fact reveal"><span>Favorite Music</span><strong>Blue by yung kai</strong></div>
+        <div class="glass fact reveal"><span>Favorite Hobby</span><strong>sleeping</strong></div>
+        <div class="glass fact reveal"><span>Favorite Technology</span><strong>IT</strong></div>
+      </div>
+    </section>
+
+    <!-- QUOTE -->
+    <section class="section container quote reveal">
+      <blockquote class="gradient-text glow">“Keep learning, keep creating, and keep moving forward.”</blockquote>
+    </section>
+  </main>
+
+  <!-- FOOTER: replace with your existing footer markup if it differs -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <a href="index.html" class="logo">PANAGUITON</a>
+      <nav class="footer-links">
+        <a href="index.html">Home</a><a href="about-me.html">About</a><a href="index.html#projects">Projects</a><a href="index.html#skills">Skills</a><a href="index.html#contact">Contact</a>
+      </nav>
+      <div class="socials">
+        <a href="#" aria-label="GitHub"><svg viewBox="0 0 24 24"><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></a>
+        <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2zM4 2a2 2 0 1 1 0 4 2 2 0 0 1 0-4z"/></svg></a>
+        <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+      </div>
+    </div>
+    <p class="copyright">© <span id="year">2026</span> PANAGUITON. All rights reserved.</p>
+  </footer>
+
+  <script>
+// ===== Footer year =====
+document.getElementById('year').textContent = new Date().getFullYear();
+
+// ===== Mobile nav =====
+const toggle = document.getElementById('navToggle');
+const links = document.getElementById('navLinks');
+toggle.addEventListener('click', () => {
+  const open = links.classList.toggle('open');
+  toggle.setAttribute('aria-expanded', open);
+});
+links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => links.classList.remove('open')));
+
+// ===== Nav background on scroll =====
+const nav = document.getElementById('nav');
+addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 30), { passive: true });
+
+// ===== Reveal on scroll + progress bars =====
+function animateGoal(card) {
+  card.querySelectorAll('.fill').forEach(f => f.style.width = f.dataset.fill + '%');
+  card.querySelectorAll('[data-count]').forEach(el => {
+    const target = +el.dataset.count, start = performance.now(), dur = 1600;
+    (function tick(t) {
+      const p = Math.min((t - start) / dur, 1);
+      el.textContent = Math.round(target * p) + '%';
+      if (p < 1) requestAnimationFrame(tick);
+    })(start);
+  });
+}
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    e.target.classList.add('visible');
+    if (e.target.classList.contains('goals-card')) animateGoal(e.target);
+    io.unobserve(e.target);
+  });
+}, { threshold: .15 });
+document.querySelectorAll('.reveal').forEach((el, i) => {
+  el.style.transitionDelay = (i % 4) * 70 + 'ms';
+  io.observe(el);
+});
+
+// ===== Particle background =====
+const canvas = document.getElementById('bg-canvas');
+const ctx = canvas.getContext('2d');
+let w, h, particles = [];
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+function resize() {
+  w = canvas.width = innerWidth; h = canvas.height = innerHeight;
+  const count = Math.min(80, Math.floor(w * h / 18000));
+  particles = Array.from({ length: count }, () => ({
+    x: Math.random() * w, y: Math.random() * h,
+    vx: (Math.random() - .5) * .35, vy: (Math.random() - .5) * .35,
+    r: Math.random() * 1.6 + .5, c: Math.random() > .5 ? '0,229,255' : '255,23,68'
+  }));
+}
+function draw() {
+  ctx.clearRect(0, 0, w, h);
+  particles.forEach((p, i) => {
+    p.x += p.vx; p.y += p.vy;
+    if (p.x < 0 || p.x > w) p.vx *= -1;
+    if (p.y < 0 || p.y > h) p.vy *= -1;
+    ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 6.283);
+    ctx.fillStyle = `rgba(${p.c},.8)`; ctx.shadowBlur = 8; ctx.shadowColor = `rgb(${p.c})`; ctx.fill();
+    ctx.shadowBlur = 0;
+    for (let j = i + 1; j < particles.length; j++) {
+      const q = particles[j], d = Math.hypot(p.x - q.x, p.y - q.y);
+      if (d < 120) {
+        ctx.strokeStyle = `rgba(${p.c},${.15 * (1 - d / 120)})`;
+        ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(q.x, q.y); ctx.stroke();
+      }
+    }
+  });
+  if (!reduce) requestAnimationFrame(draw);
+}
+addEventListener('resize', resize);
+resize(); draw();
+</script>
+</body>
+</html>
